@@ -6,10 +6,11 @@ use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class CommentFixtures extends Fixture implements DependentFixtureInterface
+class CommentFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -59,5 +60,10 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [PostFixtures::class, UserFixtures::class];
+    }
+
+    public static function getGroups(): array
+    {
+        return ['comments'];
     }
 }

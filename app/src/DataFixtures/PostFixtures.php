@@ -5,10 +5,11 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\Post;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class PostFixtures extends Fixture implements DependentFixtureInterface
+class PostFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
     public const POST_SMARTPHONE = 'post_smartphone';
     public const POST_SYMFONY = 'post_symfony';
@@ -49,5 +50,10 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [CategoryFixtures::class];
+    }
+
+    public static function getGroups(): array
+    {
+        return ['posts'];
     }
 }
