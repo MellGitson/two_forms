@@ -1,0 +1,210 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test JWT Token{% endblock %}
+
+{% block body %}
+<div class="container jwt-test">
+    <h1>Test Génération de Token JWT</h1>
+    
+    <div class="test-section">
+        <h2>1️⃣ Connexion et Génération du Token</h2>
+        
+        <div class="form-group">
+            <label for="username">Utilisateur:</label>
+            <select id="username">
+                <option value="">-- Sélectionner un utilisateur --</option>
+                <option value="mell">mell (ROLE_USER)</option>
+                <option value="admin">admin (ROLE_ADMIN)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe:</label>
+            <input type="password" id="password" placeholder="Entrez le mot de passe">
+        </div>
+
+        <button onclick="generateToken()" class="btn btn-primary">Générer Token JWT</button>
+
+        <div id="credentials-info" style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 4px; display: none;">
+            <strong>Identifiants:</strong>
+            <p style="margin: 5px 0;">• mell / canac</p>
+            <p style="margin: 5px 0;">• admin / admin123</p>
+        </div>
+    </div>
+
+    <div class="test-section result-section" id="result-section" style="display: none;">
+        <h2>2️⃣ Résultat</h2>
+        
+        <div id="error-message" class="alert-error" style="display: none;"></div>
+        
+        <div id="success-message" style="display: none;">
+            <h3>✅ Authentification réussie !</h3>
+            
+            <div class="token-box">
+                <label>🔑 JWT Token:</label>
+                <textarea id="token-display" readonly></textarea>
+                <button onclick="copyToken()" class="btn btn-secondary">Copier le token</button>
+            </div>
+
+            <div class="user-info">
+                <h4>👤 Informations Utilisateur:</h4>
+                <pre id="user-info-display"></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>3️⃣ Tester avec le Token</h2>
+        
+        <button onclick="testWithToken()" class="btn btn-info" id="test-token-btn" style="display: none;">
+            Tester /api/me avec le Token
+        </button>
+
+        <div id="test-result" style="display: none; margin-top: 15px;">
+            <h4>Réponse du serveur:</h4>
+            <pre id="test-result-display"></pre>
+        </div>
+    </div>
+
+    <div class="test-section info-section">
+        <h2>ℹ️ Information API</h2>
+        <ul>
+            <li><strong>POST /api/login</strong> - Génère un token JWT</li>
+            <li><strong>GET /api/me</strong> - Récupère les infos de l'utilisateur (nécessite le token)</li>
+            <li>À ajouter dans l'en-tête: <code>Authorization: Bearer YOUR_TOKEN</code></li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .jwt-test { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .test-section { background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff; }
+    .info-section { background: #e7f3ff; border-left-color: #007bff; }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .form-group input,
+    .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+
+    .btn { padding: 10px 20px; margin-right: 10px; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-primary { background-color: #007bff; color: white; }
+    .btn-secondary { background-color: #6c757d; color: white; }
+    .btn-info { background-color: #17a2b8; color: white; }
+    .btn:hover { opacity: 0.8; }
+
+    .token-box { margin: 15px 0; }
+    .token-box textarea { width: 100%; height: 150px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace; font-size: 12px; }
+
+    .user-info { margin-top: 20px; padding: 15px; background: white; border-radius: 4px; }
+    .user-info pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+
+    .alert-error { background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 4px; border: 1px solid #f5c6cb; }
+    .result-section { background: white; border: 2px solid #007bff; }
+</style>
+
+<script>
+    // Pré-remplir le mot de passe quand l'utilisateur est sélectionné
+    document.getElementById('username').addEventListener('change', function() {
+        const username = this.value;
+        if (username === 'mell') {
+            document.getElementById('password').value = 'canac';
+        } else if (username === 'admin') {
+            document.getElementById('password').value = 'admin123';
+        }
+        document.getElementById('credentials-info').style.display = 'block';
+    });
+
+    async function generateToken() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+            showError('Veuillez remplir tous les champs');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                showError(data.error || 'Erreur d\'authentification');
+                return;
+            }
+
+            // Afficher les résultats
+            document.getElementById('result-section').style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+            document.getElementById('token-display').value = data.token;
+            document.getElementById('user-info-display').textContent = JSON.stringify(data.user, null, 2);
+            document.getElementById('test-token-btn').style.display = 'inline-block';
+
+            // Stocker le token dans sessionStorage pour tester /api/me
+            sessionStorage.setItem('jwt_token', data.token);
+
+        } catch (error) {
+            showError('Erreur réseau: ' + error.message);
+        }
+    }
+
+    function showError(message) {
+        document.getElementById('result-section').style.display = 'block';
+        document.getElementById('success-message').style.display = 'none';
+        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('error-message').textContent = '❌ ' + message;
+    }
+
+    function copyToken() {
+        const token = document.getElementById('token-display').value;
+        navigator.clipboard.writeText(token).then(() => {
+            alert('Token copié dans le presse-papiers !');
+        });
+    }
+
+    async function testWithToken() {
+        const token = sessionStorage.getItem('jwt_token');
+
+        if (!token) {
+            alert('Aucun token trouvé. Générez d\'abord un token.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            document.getElementById('test-result').style.display = 'block';
+            document.getElementById('test-result-display').textContent = JSON.stringify(data, null, 2);
+
+            if (response.ok) {
+                document.getElementById('test-result-display').style.color = 'green';
+            } else {
+                document.getElementById('test-result-display').style.color = 'red';
+            }
+
+        } catch (error) {
+            document.getElementById('test-result').style.display = 'block';
+            document.getElementById('test-result-display').textContent = 'Erreur: ' + error.message;
+            document.getElementById('test-result-display').style.color = 'red';
+        }
+    }
+</script>
+{% endblock %}
