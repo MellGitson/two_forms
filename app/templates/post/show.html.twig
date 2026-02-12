@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{post.title}}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>{{ post.title }}</h1>
+    
+    <p><strong>Catégorie:</strong> {{ post.category.name }}</p>
+    <p><strong>Date de création:</strong> {{ post.createdAt|date('d/m/Y H:i:s') }}</p>
+    
+    <div class="content">
+        <p>{{ post.content }}</p>
+    </div>
+    
+    <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn btn-warning">Éditer</a>
+    <a href="{{ path('app_post_index') }}" class="btn btn-secondary">Retour</a>
+    
+    <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" style="display:inline;">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
+    </form>
+</div>
+
+<style>
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    .btn { padding: 8px 12px; text-decoration: none; border-radius: 4px; display: inline-block; margin-right: 5px; }
+    .btn-warning { background-color: #ffc107; color: black; }
+    .btn-secondary { background-color: #6c757d; color: white; }
+    .btn-danger { background-color: #dc3545; color: white; border: none; cursor: pointer; }
+    .btn:hover { opacity: 0.8; }
+    .content { margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-radius: 4px; }
+    p { line-height: 1.6; }
+</style>
+{% endblock %}
