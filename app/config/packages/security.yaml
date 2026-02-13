@@ -21,13 +21,9 @@ security:
         
         main:
             lazy: true
-            stateless: false
             provider: app_user_provider
-            entry_point: form_login
-            jwt: ~
-            form_login:
-                login_path: app_login
-                check_path: app_login
+            custom_authenticators:
+                - App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
                 target: app_login

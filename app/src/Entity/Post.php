@@ -26,6 +26,9 @@ class Post
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $approved = false;
+
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
@@ -116,6 +119,18 @@ class Post
                 $comment->setPost(null);
             }
         }
+        return $this;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->approved;
+    }
+
+    public function setApproved(bool $approved): static
+    {
+        $this->approved = $approved;
+
         return $this;
     }
 }

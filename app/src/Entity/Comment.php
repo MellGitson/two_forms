@@ -21,6 +21,9 @@ class Comment
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $approved = false;
+
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post = null;
@@ -80,6 +83,18 @@ class Comment
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
+        return $this;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->approved;
+    }
+
+    public function setApproved(bool $approved): static
+    {
+        $this->approved = $approved;
+
         return $this;
     }
 }
