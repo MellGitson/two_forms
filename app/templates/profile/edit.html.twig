@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+<div class="container edit-profile-container">
+    <div class="edit-header">
+        <h1>Modifier mon profil</h1>
+    </div>
+
+    <div class="edit-card">
+        {{ form_start(form, {attr: {class: 'profile-form'}}) }}
+        
+        <div class="form-group">
+            {{ form_label(form.firstName, 'Prénom') }}
+            {{ form_widget(form.firstName, {attr: {class: 'form-input'}}) }}
+            {{ form_errors(form.firstName) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.lastName, 'Nom') }}
+            {{ form_widget(form.lastName, {attr: {class: 'form-input'}}) }}
+            {{ form_errors(form.lastName) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.email, 'Adresse e-mail') }}
+            {{ form_widget(form.email, {attr: {class: 'form-input'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.profilePicture, 'Photo de profil (URL)') }}
+            {{ form_widget(form.profilePicture, {attr: {class: 'form-input', placeholder: 'https://exemple.com/photo.jpg'}}) }}
+            {{ form_errors(form.profilePicture) }}
+            {% if user.profilePicture %}
+                <div class="preview-section">
+                    <label>Aperçu</label>
+                    <img src="{{ user.profilePicture }}" alt="Aperçu" class="preview-image">
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">💾 Enregistrer les modifications</button>
+            <a href="{{ path('app_profile_show') }}" class="btn btn-secondary">← Annuler</a>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<style>
+    .edit-profile-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .edit-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .edit-header h1 {
+        font-size: 2em;
+        color: #333;
+        margin: 0;
+    }
+
+    .edit-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 30px;
+    }
+
+    .profile-form {
+        display: grid;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        font-size: 0.95em;
+    }
+
+    .form-input {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1em;
+        font-family: inherit;
+        transition: border-color 0.3s;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+
+    .form-group .errors {
+        color: #dc3545;
+        font-size: 0.85em;
+        margin-top: 5px;
+    }
+
+    .preview-section {
+        margin-top: 15px;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 4px;
+    }
+
+    .preview-section label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .preview-image {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 4px;
+        object-fit: cover;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 12px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95em;
+        transition: opacity 0.3s;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+
+    @media (max-width: 768px) {
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

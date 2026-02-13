@@ -10,7 +10,10 @@
         
         {% if is_granted('ROLE_USER') %}
             <div class="user-actions">
-                <a href="{{ path('app_post_new') }}" class="btn btn-primary">✏️ Créer un article</a>
+                {% if is_granted('ROLE_MODERATOR') %}
+                    <a href="{{ path('app_post_new') }}" class="btn btn-primary">✏️ Créer un article</a>
+                {% endif %}
+                <a href="{{ path('app_profile_show') }}" class="btn btn-profile">👤 Mon profil</a>
                 {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('app_admin_dashboard') }}" class="btn btn-admin">🔧 Panneau Admin</a>
                 {% endif %}
@@ -137,6 +140,11 @@
 
     .btn-admin {
         background-color: #28a745;
+        color: white;
+    }
+
+    .btn-profile {
+        background-color: #17a2b8;
         color: white;
     }
 

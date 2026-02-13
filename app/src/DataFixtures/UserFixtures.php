@@ -25,6 +25,11 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         // Créer utilisateur standard
         $user = new User();
         $user->setUsername('mell');
+        $user->setEmail('mell@example.com');
+        $user->setFirstName('Melissa');
+        $user->setLastName('Johnson');
+        $user->setProfilePicture('https://i.pravatar.cc/150?img=1');
+        $user->setCreatedAt(new \DateTimeImmutable());
         $hashedPassword = $this->hasher->hashPassword($user, 'canac');
         $user->setPassword($hashedPassword);
         $user->setRoles(['ROLE_USER']);
@@ -34,6 +39,11 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         // Créer utilisateur admin
         $admin = new User();
         $admin->setUsername('admin');
+        $admin->setEmail('admin@example.com');
+        $admin->setFirstName('Admin');
+        $admin->setLastName('Manager');
+        $admin->setProfilePicture('https://i.pravatar.cc/150?img=2');
+        $admin->setCreatedAt(new \DateTimeImmutable());
         $hashedPassword = $this->hasher->hashPassword($admin, 'admin123');
         $admin->setPassword($hashedPassword);
         $admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
