@@ -23,6 +23,9 @@ class Post
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagePath = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -130,6 +133,18 @@ class Post
     public function setApproved(bool $approved): static
     {
         $this->approved = $approved;
+
+        return $this;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(?string $imagePath): static
+    {
+        $this->imagePath = $imagePath;
 
         return $this;
     }
