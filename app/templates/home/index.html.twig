@@ -28,7 +28,7 @@
                 <article class="post-card">
                     {% if post.imagePath %}
                         <div class="post-image">
-                            <img src="{{ post.imagePath }}" alt="{{ post.title }}" loading="lazy">
+                            <img src="{{ asset('uploads/posts/' ~ post.imagePath) }}" alt="{{ post.title }}" loading="lazy">
                         </div>
                     {% else %}
                         <div class="post-image placeholder">

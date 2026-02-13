@@ -30,7 +30,9 @@ class ProfileType extends AbstractType
             ->add('profilePicture', UrlType::class, [
                 'label' => 'Photo de profil (URL)',
                 'required' => false,
-                'placeholder' => 'https://exemple.com/photo.jpg',
+                'attr' => [
+                    'placeholder' => 'https://exemple.com/photo.jpg',
+                ],
             ])
         ;
     }

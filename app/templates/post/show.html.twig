@@ -16,7 +16,7 @@
 
     {% if post.imagePath %}
         <div class="post-featured-image">
-            <img src="{{ post.imagePath }}" alt="{{ post.title }}">
+            <img src="{{ asset('uploads/posts/' ~ post.imagePath) }}" alt="{{ post.title }}">
         </div>
     {% endif %}
 

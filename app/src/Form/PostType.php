@@ -7,8 +7,10 @@ use App\Entity\Category;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class PostType extends AbstractType
 {
@@ -17,10 +19,24 @@ class PostType extends AbstractType
         $builder
             ->add('title')
             ->add('content')
-            ->add('imagePath', TextType::class, [
-                'label' => 'URL de l\'image (optionnel)',
+            ->add('imagePath', FileType::class, [
+                'label' => 'Image du post (PNG, JPEG, JPG)',
                 'required' => false,
-                'attr' => ['placeholder' => 'https://exemple.com/image.jpg'],
+                'mapped' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/png',
+                            'image/jpeg',
+                            'image/jpg',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (PNG, JPEG, JPG)',
+                    ])
+                ],
+                'attr' => [
+                    'accept' => '.png,.jpg,.jpeg',
+                ],
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
