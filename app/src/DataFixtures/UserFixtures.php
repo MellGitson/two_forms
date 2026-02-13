@@ -46,7 +46,7 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $admin->setCreatedAt(new \DateTimeImmutable());
         $hashedPassword = $this->hasher->hashPassword($admin, 'admin123');
         $admin->setPassword($hashedPassword);
-        $admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
+        $admin->setRoles(['ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER']);
         $manager->persist($admin);
         $this->addReference(self::USER_ADMIN, $admin);
 

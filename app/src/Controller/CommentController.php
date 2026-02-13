@@ -42,8 +42,19 @@ class CommentController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Commentaire ajouté avec succès, en attente d\'approbation');
-
-            return $this->redirectToRoute('app_post_show', ['id' => $post->getId()]);
+        } else {
+            // If form not valid, get content from textarea directly
+            $payload = $request->getPayload();
+            if ($payload->get('comment_type')) {
+                $content = $payload->get('comment_type')['content'] ?? null;
+                if ($content) {
+                    $comment->setContent($content);
+                    $entityManager->persist($comment);
+                    $entityManager->flush();
+                    
+                    $this->addFlash('success', 'Commentaire ajouté avec succès, en attente d\'approbation');
+                }
+            }
         }
 
         return $this->redirectToRoute('app_post_show', ['id' => $post->getId()]);
