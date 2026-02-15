@@ -1,14 +1,47 @@
 {% extends 'base.html.twig' %}
-<style>
-    * { box-sizing: border-box; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; }
-    .btn-back { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
-    .btn-back:hover { text-decoration: underline; }
-    .user-card { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 30px; }
-    .user-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-    .user-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    /* ...le reste du CSS... */
-</style>
+
+{% block title %}Détails de l'utilisateur - {{ user.username }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <a href="{{ path('app_user_index') }}" class="btn-back">← Retour</a>
+    
+    <div class="user-card">
+        <div class="user-header">
+            {% if user.profilePicture %}
+                <img src="{{ asset('uploads/profiles/' ~ user.profilePicture) }}" alt="Photo de {{ user.firstName }} {{ user.lastName }}" class="user-avatar">
+            {% else %}
+                <div class="user-avatar placeholder">
+                    {{ (user.firstName|first ~ user.lastName|first)|upper }}
+                </div>
+            {% endif %}
+            
+            <div class="user-title">
+                <h1>{{ user.firstName }} {{ user.lastName }}</h1>
+                <p class="username">@{{ user.username }}</p>
+            </div>
+        </div>
+
+        <div class="user-info">
+            <div class="info-row">
+                <label>Email:</label>
+                <p>{{ user.email }}</p>
+            </div>
+            <div class="info-row">
+                <label>Nom d'utilisateur:</label>
+                <p>{{ user.username }}</p>
+            </div>
+            <div class="info-row">
+                <label>Prénom:</label>
+                <p>{{ user.firstName }}</p>
+            </div>
+            <div class="info-row">
+                <label>Nom:</label>
+                <p>{{ user.lastName }}</p>
+            </div>
+            <div class="info-row">
+                <label>Rôles:</label>
+                <div class="roles">
                     {% for role in user.roles %}
                         <span class="badge">{{ role }}</span>
                     {% endfor %}
@@ -44,184 +77,36 @@
     </div>
 </div>
 
-{% verbatim %}
 <style>
     * { box-sizing: border-box; }
-    
     .container { max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; }
-    
-    .btn-back {
-        display: inline-block;
-        margin-bottom: 20px;
-        color: #007bff;
-        text-decoration: none;
-    }
-    
-    .btn-back:hover {
-        text-decoration: underline;
-    }
-    
-    .user-card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        padding: 30px;
-    }
-    
-    .user-header {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .user-avatar {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .user-avatar.placeholder {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        font-size: 2.5em;
-        font-weight: bold;
-        border-radius: 50%;
-    }
-    
-    .user-title h1 {
-        margin: 0 0 5px 0;
-        color: #333;
-        font-size: 1.5em;
-    }
-    
-    .username {
-        margin: 0;
-        color: #999;
-        font-size: 0.9em;
-    }
-    
-    .user-info {
-        margin-bottom: 30px;
-    }
-    
-    .info-row {
-        padding: 12px 0;
-        border-bottom: 1px solid #f0f0f0;
-    }
-    
-    .info-row:last-child {
-        border-bottom: none;
-    }
-    
-    .info-row label {
-        font-weight: 600;
-        color: #555;
-        display: block;
-        margin-bottom: 5px;
-    }
-    
-    .info-row p {
-        margin: 0;
-        color: #333;
-    }
-    
-    .roles {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-    
-    .badge {
-        background-color: #007bff;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85em;
-        font-weight: 600;
-    }
-    
-    .actions {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-    
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        font-size: 0.95em;
-        transition: opacity 0.3s;
-    }
-    
-    .btn-primary {
-        background-color: #007bff;
-        color: white;
-    }
-    
-    .btn-success {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .btn-warning {
-        background-color: #ffc107;
-        color: black;
-    }
-    
-    .btn-secondary {
-        background-color: #6c757d;
-        color: white;
-    }
-    
-    .btn:hover {
-        opacity: 0.85;
-    }
-    
-    @media (max-width: 768px) {
-        .user-card {
-            padding: 20px;
-        }
-        
-        .user-header {
-            flex-direction: column;
-            text-align: center;
-        }
-        
-        .actions {
-            flex-direction: column;
-        }
-        
-        .btn {
-            width: 100%;
-            text-align: center;
-        }
-    }
-</style>
-{% endblock %}
-    .user-info { background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; }
-    .user-info p { margin: 10px 0; }
-    .actions { margin: 20px 0; }
-    .btn { display: inline-block; padding: 10px 20px; margin-right: 10px; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; }
-    .btn-warning { background-color: #ffc107; color: black; }
+    .btn-back { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
+    .btn-back:hover { text-decoration: underline; }
+    .user-card { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 30px; }
+    .user-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+    .user-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .user-avatar.placeholder { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 2.5em; font-weight: bold; }
+    .user-title h1 { margin: 0 0 5px 0; color: #333; font-size: 1.5em; }
+    .username { margin: 0; color: #999; font-size: 0.9em; }
+    .user-info { margin-bottom: 30px; }
+    .info-row { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row label { font-weight: 600; color: #555; display: block; margin-bottom: 5px; }
+    .info-row p { margin: 0; color: #333; }
+    .roles { display: flex; gap: 8px; flex-wrap: wrap; }
+    .badge { background-color: #007bff; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; font-size: 0.95em; transition: opacity 0.3s; }
+    .btn-primary { background-color: #007bff; color: white; }
     .btn-success { background-color: #28a745; color: white; }
-    .btn-danger { background-color: #dc3545; color: white; }
+    .btn-warning { background-color: #ffc107; color: black; }
     .btn-secondary { background-color: #6c757d; color: white; }
-    .btn:hover { opacity: 0.8; }
-    .badge { display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; border-radius: 3px; margin-right: 5px; }
-    .alert { padding: 15px; margin-bottom: 20px; border-radius: 4px; }
-    .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .btn:hover { opacity: 0.85; }
+    @media (max-width: 768px) {
+        .user-card { padding: 20px; }
+        .user-header { flex-direction: column; text-align: center; }
+        .actions { flex-direction: column; }
+        .btn { width: 100%; text-align: center; }
+    }
 </style>
-{% endverbatim %}
 {% endblock %}
