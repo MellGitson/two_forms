@@ -410,6 +410,7 @@
                 <a href="{{ path('app_home') }}" class="navbar-brand">📝 MyBlog</a>
                 <ul class="nav-links">
                     <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                    <li><a href="{{ path('app_post_index') }}">📚 Articles</a></li>
                     {% if app.user %}
                         <li><a href="{{ path('app_profile_show') }}">Mon Profil</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
