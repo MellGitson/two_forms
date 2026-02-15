@@ -60,17 +60,17 @@
         </div>
 
         <div class="actions">
-            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">✏️ Éditer</a>
+            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">Éditer</a>
             
             {% if 'ROLE_MODERATOR' not in user.roles %}
                 <form action="{{ path('app_user_promote_moderator', {'id': user.id}) }}" method="post" style="display: inline;">
                     <input type="hidden" name="_token" value="{{ csrf_token('promote' ~ user.id) }}">
-                    <button type="submit" class="btn btn-success">⬆️ Promouvoir Modérateur</button>
+                    <button type="submit" class="btn btn-success">Promouvoir Modérateur</button>
                 </form>
             {% else %}
                 <form action="{{ path('app_user_demote_moderator', {'id': user.id}) }}" method="post" style="display: inline;">
                     <input type="hidden" name="_token" value="{{ csrf_token('demote' ~ user.id) }}">
-                    <button type="submit" class="btn btn-warning">⬇️ Retirer Modérateur</button>
+                    <button type="submit" class="btn btn-warning">Retirer Modérateur</button>
                 </form>
             {% endif %}
         </div>

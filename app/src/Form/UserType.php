@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\File;
 
 class UserType extends AbstractType
@@ -27,7 +28,10 @@ class UserType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse e-mail',
-                'constraints' => [new NotBlank()],
+                'constraints' => [
+                    new NotBlank(),
+                    new Email(),
+                ],
             ])
             ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
@@ -41,7 +45,6 @@ class UserType extends AbstractType
                 'label' => 'Mot de passe',
                 'mapped' => false,
                 'required' => !$editMode,
-                'constraints' => $editMode ? [] : [new NotBlank()],
             ])
             ->add('profilePicture', FileType::class, [
                 'label' => 'Photo de profil (PNG, JPEG, JPG)',
