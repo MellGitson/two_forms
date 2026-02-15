@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commentaires en attente d'approbation{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Commentaires en attente d'approbation</h1>
+    {% if comments is not empty %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Auteur</th>
+                    <th>Contenu</th>
+                    <th>Date</th>
+                    <th>Post</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                    <tr>
+                        <td>{{ comment.id }}</td>
+                        <td>{{ comment.author.firstName }} {{ comment.author.lastName }}</td>
+                        <td>{{ comment.content }}</td>
+                        <td>{{ comment.createdAt|date('d/m/Y à H:i') }}</td>
+                        <td>{{ comment.post.title }}</td>
+                        <td>
+                            <form method="post" action="{{ path('app_admin_comment_approve', {'id': comment.id}) }}" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ comment.id) }}">
+                                <button type="submit" class="btn btn-success">Approuver</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucun commentaire en attente.</p>
+    {% endif %}
+</div>
+{% endblock %}

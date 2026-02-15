@@ -9,7 +9,7 @@
         <h1>Bienvenue sur MyBlog</h1>
         <p class="hero-subtitle">Un espace de partage d'articles et de réflexions en communauté</p>
         
-        {% if is_granted('ROLE_MODERATOR') %}
+        {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-large">Écrire un article</a>
         {% elseif not is_granted('ROLE_USER') %}
             <a href="{{ path('app_login') }}" class="btn btn-primary btn-large">Se connecter</a>

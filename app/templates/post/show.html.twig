@@ -24,12 +24,12 @@
         {{ post.content }}
     </div>
 
-    {% if is_granted('ROLE_MODERATOR') %}
+    {% if is_granted('ROLE_ADMIN') %}
         <div class="post-actions">
             <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn btn-primary">✏️ Éditer</a>
             <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" style="display:inline;">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr ?')">🗑️ Supprimer</button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('êtes-vous sûr ?')">🗑️ Supprimer</button>
             </form>
         </div>
     {% endif %}
@@ -40,10 +40,10 @@
         {% if is_granted('ROLE_USER') %}
             <div class="comment-form-section">
                 <h3>Ajouter un commentaire</h3>
-                <form method="post" action="{{ path('app_comment_new', {'postId': post.id}) }}" class="comment-form">
-                    <textarea name="comment_type[content]" placeholder="Écrivez votre commentaire..." required class="comment-input"></textarea>
+                {{ form_start(form, {'action': path('app_comment_new', {'postId': post.id}), 'attr': {'class': 'comment-form'}}) }}
+                    {{ form_widget(form.content, {'attr': {'class': 'comment-input', 'placeholder': 'Écrivez votre commentaire...'}}) }}
                     <button type="submit" class="btn btn-primary">Publier le commentaire</button>
-                </form>
+                {{ form_end(form) }}
                 <p class="comment-note">Votre commentaire sera approuvé avant d'être visible</p>
             </div>
         {% else %}

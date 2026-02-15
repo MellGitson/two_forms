@@ -25,7 +25,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager, FileUploadService $fileUploadService): Response
     {
         $post = new Post();
@@ -55,13 +55,15 @@ class PostController extends AbstractController
     #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
     public function show(Post $post): Response
     {
+        $form = $this->createForm(\App\Form\CommentType::class);
         return $this->render('post/show.html.twig', [
             'post' => $post,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, FileUploadService $fileUploadService): Response
     {
         $form = $this->createForm(PostType::class, $post);
@@ -92,7 +94,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Post $post, EntityManagerInterface $entityManager, FileUploadService $fileUploadService): Response
     {
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->getPayload()->get('_token'))) {
