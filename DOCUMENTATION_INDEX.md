@@ -203,15 +203,9 @@ Puis **[IMPLEMENTATION_LOG.md](./IMPLEMENTATION_LOG.md)** section "Bugs corrigé
 
 ---
 
-## 🔐 Comptes de Test
+## 🔐 Authentification
 
-| Rôle | Username | Password | Accès |
-|------|----------|----------|-------|
-| Admin | `admin` | `admin123` | Tout complet |
-| Modérateur | `mell` | `canac` | Articles + Profil |
-| Visiteur | - | - | Lecture seule publique |
-
-Créer des accounts additionnels via `/user/new` (Admin only)
+Veuillez utiliser vos identifiants personnels pour vous connecter. Les comptes de test doivent être configurés localement lors du démarrage initial.
 
 ---
 

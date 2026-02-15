@@ -20,7 +20,7 @@ http://127.0.0.1:8000
 ### Étape 4: Se connecter (test)
 **Admin**:
 - Username: `admin`
-- Password: `admin123`
+- Password: [À configurer lors du démarrage initial]
 
 **Modérateur**:
 - Username: `mell`
@@ -153,7 +153,7 @@ php bin/console debug:service # Voir tous services
 ✅ Tout faire (créer, éditer, supprimer articles ET users)
 ```
 Username: admin
-Password: admin123
+Password: [À configurer lors du démarrage initial]
 Routes: /, /post/*, /user/*, /profile/*
 ```
 
@@ -406,7 +406,7 @@ Pour plus de détails:
 
 - [ ] Serveur démarre: `symfony serve`
 - [ ] Accueil charge: http://127.0.0.1:8000
-- [ ] Login fonctionne admin/admin123
+- [ ] Login fonctionne avec identifiants configurés
 - [ ] Article crée et visible
 - [ ] Photo de profil uploadée
 - [ ] Commentaire approuvé visible

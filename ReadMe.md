@@ -43,13 +43,9 @@ symfony serve
 
 Accédez au site à : **http://127.0.0.1:8000**
 
-## 🔑 Comptes de Test
+## 🔑 Authentification
 
-| Rôle | Username | Mot de passe |
-|------|----------|------------|
-| 🔐 Admin | `admin` | `admin123` |
-| 📝 Modérateur | `mell` | `canac` |
-| 📖 Visiteur | Pas d'accès | - |
+Veuillez vous connecter avec vos identifiants personnels pour accéder aux fonctionnalités protégées.
 
 ## 📋 Fonctionnalités Implémentées
 

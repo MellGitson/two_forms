@@ -11,7 +11,7 @@
   
 - [ ] **Login** (`/login`) - Authentification
   - [ ] Formulaire username/password
-  - [ ] Test Admin: admin/admin123
+  - [ ] Test Admin: avec identifiants sécurisés
   - [ ] Test Modérateur: mell/canac
   - [ ] Redirection après login
   - [ ] Visiteur a accès en lecture seule
@@ -91,7 +91,7 @@
   - [x] Slide animations
 
 ### 4. Données de Test
-- [x] Admin créé (admin/admin123)
+- [x] Admin créé avec mot de passe sécurisé
 - [x] Modérateur créé (mell/canac)
 - [x] Utilisateur créé
 - [x] Catégories créées (3+)

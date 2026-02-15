@@ -24,12 +24,6 @@
         </div>
 
         <button onclick="generateToken()" class="btn btn-primary">Générer Token JWT</button>
-
-        <div id="credentials-info" style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 4px; display: none;">
-            <strong>Identifiants:</strong>
-            <p style="margin: 5px 0;">• mell / canac</p>
-            <p style="margin: 5px 0;">• admin / admin123</p>
-        </div>
     </div>
 
     <div class="test-section result-section" id="result-section" style="display: none;">
@@ -106,12 +100,7 @@
     // Pré-remplir le mot de passe quand l'utilisateur est sélectionné
     document.getElementById('username').addEventListener('change', function() {
         const username = this.value;
-        if (username === 'mell') {
-            document.getElementById('password').value = 'canac';
-        } else if (username === 'admin') {
-            document.getElementById('password').value = 'admin123';
-        }
-        document.getElementById('credentials-info').style.display = 'block';
+        document.getElementById('password').value = '';
     });
 
     async function generateToken() {

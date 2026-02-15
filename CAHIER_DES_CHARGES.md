@@ -283,18 +283,9 @@ symfony serve
 
 ### 3. Accès
 - **URL**: http://127.0.0.1:8000
-- **Admin**: admin / admin123
-- **User**: mell / canac
+- **Authentification**: Identifiants utilisateur personnalisés lors de la mise en place initiale
 
 ---
-
-## ✨ Comptes de test
-
-| Rôle | Username | Password | Permissions |
-|------|----------|----------|-------------|
-| Admin | admin | admin123 | Tout ✅ |
-| Modérateur | mell | canac | Articles + Profil |
-| Visiteur | - | - | Lecture seule |
 
 ---
 

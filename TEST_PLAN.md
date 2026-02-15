@@ -40,12 +40,10 @@ Ce document guide les utilisateurs pour tester complètement le MyBlog et s'assu
 5. [ ] Formulaire commentaire NOT visible (avec message: "Connectez-vous pour commenter")
 
 ### Test 2.2: Login Admin
-**Identifiants**: admin / admin123
+**Identifiants**: [Veuillez utiliser les identifiants configurés]
 
 1. Cliquer "Connexion" en haut
-2. Remplir formulaire:
-   - [ ] Username: admin
-   - [ ] Password: admin123
+2. Remplir formulaire avec les identifiants admin configurés:
 3. Click "Connexion"
 4. [ ] Redirection vers `/`
 5. [ ] Flash message verte "Successfully logged in"
@@ -56,10 +54,10 @@ Ce document guide les utilisateurs pour tester complètement le MyBlog et s'assu
    - [ ] Link "/profile/" visible
 
 ### Test 2.3: Login Modérateur
-**Identifiants**: mell / canac
+**Identifiants**: [Veuillez utiliser les identifiants configurés]
 
 1. Logout en haut
-2. Login avec mell / canac
+2. Login avec les identifiants modérateur configurés
 3. [ ] Redirection `/`
 4. Vérifier navbar:
    - [ ] "Connecté en tant que: mell"
@@ -80,7 +78,7 @@ Ce document guide les utilisateurs pour tester complètement le MyBlog et s'assu
 ## 📝 Test 3: Gestion Articles (Admin/Modérateur)
 
 ### Test 3.1: Créer un Article (Admin)
-**Login**: admin / admin123
+**Login**: [Identifiants admin configurés]
 
 1. Cliquer `/post/new`
 2. Form visible avec champs:
