@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Service\FileUploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,13 +32,21 @@ class UserController extends AbstractController
     public function new(
         Request $request,
         EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        FileUploadService $fileUploadService
     ): Response {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle profile picture upload
+            $profilePictureFile = $form->get('profilePicture')->getData();
+            if ($profilePictureFile) {
+                $filename = $fileUploadService->uploadFile($profilePictureFile, 'profiles');
+                $user->setProfilePicture($filename);
+            }
+
             // Hash the password
             $plainPassword = $form->get('plainPassword')->getData();
             if ($plainPassword) {
@@ -50,6 +59,9 @@ class UserController extends AbstractController
             if (empty($user->getRoles())) {
                 $user->setRoles(['ROLE_USER']);
             }
+
+            // Set creation date
+            $user->setCreatedAt(new \DateTimeImmutable());
 
             $em->persist($user);
             $em->flush();
@@ -77,12 +89,25 @@ class UserController extends AbstractController
         Request $request,
         User $user,
         EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        FileUploadService $fileUploadService
     ): Response {
         $form = $this->createForm(UserType::class, $user, ['edit_mode' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle profile picture upload
+            $profilePictureFile = $form->get('profilePicture')->getData();
+            if ($profilePictureFile) {
+                // Delete old profile picture if exists
+                if ($user->getProfilePicture()) {
+                    $fileUploadService->deleteFile($user->getProfilePicture(), 'profiles');
+                }
+                
+                $filename = $fileUploadService->uploadFile($profilePictureFile, 'profiles');
+                $user->setProfilePicture($filename);
+            }
+
             // Hash the password if provided
             $plainPassword = $form->get('plainPassword')->getData();
             if ($plainPassword) {
@@ -105,13 +130,18 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: '_delete', methods: ['DELETE'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $em): Response
+    public function delete(Request $request, User $user, EntityManagerInterface $em, FileUploadService $fileUploadService): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             // Prevent deleting the current user
             if ($user->getId() === $this->getUser()->getId()) {
                 $this->addFlash('error', 'Vous ne pouvez pas supprimer votre propre compte!');
             } else {
+                // Delete profile picture if exists
+                if ($user->getProfilePicture()) {
+                    $fileUploadService->deleteFile($user->getProfilePicture(), 'profiles');
+                }
+                
                 $em->remove($user);
                 $em->flush();
                 $this->addFlash('success', 'Utilisateur supprimé avec succès!');

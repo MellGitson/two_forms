@@ -28,7 +28,6 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $user->setEmail('mell@example.com');
         $user->setFirstName('Melissa');
         $user->setLastName('Johnson');
-        $user->setProfilePicture('https://i.pravatar.cc/150?img=1');
         $user->setCreatedAt(new \DateTimeImmutable());
         $hashedPassword = $this->hasher->hashPassword($user, 'canac');
         $user->setPassword($hashedPassword);
@@ -42,7 +41,6 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $admin->setEmail('admin@example.com');
         $admin->setFirstName('Admin');
         $admin->setLastName('Manager');
-        $admin->setProfilePicture('https://i.pravatar.cc/150?img=2');
         $admin->setCreatedAt(new \DateTimeImmutable());
         $hashedPassword = $this->hasher->hashPassword($admin, 'admin123');
         $admin->setPassword($hashedPassword);

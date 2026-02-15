@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ProfileType;
+use App\Service\FileUploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/edit', name: 'app_profile_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, FileUploadService $fileUploadService): Response
     {
         $user = $this->getUser();
 
@@ -38,6 +39,18 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $profilePictureFile = $form->get('profilePicture')->getData();
+            
+            if ($profilePictureFile) {
+                // Delete old profile picture if exists
+                if ($user->getProfilePicture()) {
+                    $fileUploadService->deleteFile($user->getProfilePicture(), 'profiles');
+                }
+                
+                $filename = $fileUploadService->uploadFile($profilePictureFile, 'profiles');
+                $user->setProfilePicture($filename);
+            }
+            
             $user->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
 

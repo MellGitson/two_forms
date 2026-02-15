@@ -30,13 +30,13 @@
         </div>
 
         <div class="form-group">
-            {{ form_label(form.profilePicture, 'Photo de profil (URL)') }}
-            {{ form_widget(form.profilePicture, {attr: {class: 'form-input', placeholder: 'https://exemple.com/photo.jpg'}}) }}
+            {{ form_label(form.profilePicture, 'Photo de profil (PNG, JPEG, JPG)') }}
+            {{ form_widget(form.profilePicture, {attr: {class: 'form-input'}}) }}
             {{ form_errors(form.profilePicture) }}
             {% if user.profilePicture %}
                 <div class="preview-section">
-                    <label>Aperçu</label>
-                    <img src="{{ user.profilePicture }}" alt="Aperçu" class="preview-image">
+                    <label>Photo actuelle</label>
+                    <img src="{{ asset('uploads/profiles/' ~ user.profilePicture) }}" alt="Aperçu" class="preview-image">
                 </div>
             {% endif %}
         </div>

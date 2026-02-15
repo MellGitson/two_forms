@@ -8,7 +8,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 
 class ProfileType extends AbstractType
 {
@@ -27,11 +28,23 @@ class ProfileType extends AbstractType
                 'label' => 'Adresse e-mail',
                 'required' => true,
             ])
-            ->add('profilePicture', UrlType::class, [
-                'label' => 'Photo de profil (URL)',
+            ->add('profilePicture', FileType::class, [
+                'label' => 'Photo de profil (PNG, JPEG, JPG)',
                 'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/png',
+                            'image/jpeg',
+                            'image/jpg',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez uploader une photo valide (PNG, JPEG, JPG)',
+                    ])
+                ],
                 'attr' => [
-                    'placeholder' => 'https://exemple.com/photo.jpg',
+                    'accept' => '.png,.jpg,.jpeg',
                 ],
             ])
         ;

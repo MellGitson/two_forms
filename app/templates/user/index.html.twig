@@ -4,7 +4,12 @@
 
 {% block body %}
 <div class="container">
-    <h1>Utilisateurs</h1>
+    <a href="{{ path('app_home') }}" class="btn-back">← Retour</a>
+    
+    <div class="header">
+        <h1>Gestion des Utilisateurs</h1>
+        <a href="{{ path('app_user_new') }}" class="btn btn-primary">✚ Créer un utilisateur</a>
+    </div>
     
     {% if app.flashes %}
         {% for label, messages in app.flashes %}
@@ -16,69 +21,295 @@
         {% endfor %}
     {% endif %}
 
-    <div class="actions">
-        <a href="{{ path('app_user_new') }}" class="btn btn-primary">+ Créer un utilisateur</a>
-        <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour</a>
-    </div>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom d'utilisateur</th>
-                <th>Rôles</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>
-                        {% for role in user.roles %}
-                            <span class="badge">{{ role }}</span>
-                        {% endfor %}
-                    </td>
-                    <td>
-                        <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-sm btn-info">Voir</a>
-                        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-warning">Éditer</a>
-                        <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="post" style="display: inline;">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr?')">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4">Aucun utilisateur trouvé</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {% if users|length > 0 %}
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Rôles</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td class="user-avatar-cell">
+                                {% if user.profilePicture %}
+                                    <img src="{{ asset('uploads/profiles/' ~ user.profilePicture) }}" alt="Photo de {{ user.firstName }} {{ user.lastName }}" class="user-avatar">
+                                {% else %}
+                                    <div class="user-avatar placeholder">
+                                        {{ (user.firstName|first ~ user.lastName|first)|upper }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="user-name">
+                                <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+                                <br>
+                                <small>@{{ user.username }}</small>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td class="user-roles">
+                                {% for role in user.roles %}
+                                    <span class="badge">{{ role }}</span>
+                                {% endfor %}
+                            </td>
+                            <td class="actions-cell">
+                                <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-sm btn-info">👁️ Voir</a>
+                                <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-warning">✏️ Éditer</a>
+                                <form action="{{ path('app_user_delete', {'id': user.id}) }}" method="post" style="display: inline;">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">🗑️ Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>Aucun utilisateur trouvé</p>
+            <a href="{{ path('app_user_new') }}" class="btn btn-primary">✚ Créer le premier utilisateur</a>
+        </div>
+    {% endif %}
 </div>
 
 <style>
-    .container { max-width: 1000px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; }
-    h1 { color: #333; }
-    .actions { margin: 20px 0; }
-    .btn { display: inline-block; padding: 8px 15px; margin-right: 5px; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; }
-    .btn-primary { background-color: #007bff; color: white; }
-    .btn-secondary { background-color: #6c757d; color: white; }
-    .btn-info { background-color: #17a2b8; color: white; }
-    .btn-warning { background-color: #ffc107; color: black; }
-    .btn-danger { background-color: #dc3545; color: white; }
-    .btn:hover { opacity: 0.8; }
-    .btn-sm { padding: 5px 10px; font-size: 0.9em; }
-    .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-    .table th { background-color: #f9f9f9; font-weight: bold; }
-    .table tr:hover { background-color: #f5f5f5; }
-    .badge { display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; border-radius: 3px; margin-right: 5px; }
-    .alert { padding: 15px; margin-bottom: 20px; border-radius: 4px; }
-    .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    .alert-info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    * { box-sizing: border-box; }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+    
+    .btn-back {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    .btn-back:hover {
+        text-decoration: underline;
+    }
+    
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #eee;
+    }
+    
+    .header h1 {
+        margin: 0;
+        color: #333;
+    }
+    
+    .users-table {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    thead {
+        background-color: #f9f9f9;
+    }
+    
+    th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        color: #555;
+        border-bottom: 2px solid #eee;
+    }
+    
+    td {
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+        color: #333;
+    }
+    
+    tbody tr:hover {
+        background-color: #f9f9f9;
+    }
+    
+    .user-avatar-cell {
+        text-align: center;
+    }
+    
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .user-avatar.placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: bold;
+        font-size: 0.9em;
+        border-radius: 50%;
+    }
+    
+    .user-name {
+        min-width: 200px;
+    }
+    
+    .user-name strong {
+        display: block;
+    }
+    
+    .user-name small {
+        color: #999;
+    }
+    
+    .user-roles {
+        min-width: 150px;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        margin-right: 5px;
+    }
+    
+    .actions-cell {
+        white-space: nowrap;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-right: 5px;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85em;
+        font-weight: 600;
+        transition: opacity 0.3s;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    .btn-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+    
+    .btn-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .btn-sm {
+        padding: 5px 10px;
+        font-size: 0.8em;
+    }
+    
+    .btn:hover {
+        opacity: 0.85;
+    }
+    
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        margin-top: 20px;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+    
+    .alert p {
+        margin: 0;
+    }
+    
+    .empty-state {
+        background: white;
+        border-radius: 8px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .empty-state p {
+        color: #999;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+    
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        table {
+            font-size: 0.85em;
+        }
+        
+        th, td {
+            padding: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.75em;
+        }
+    }
 </style>
 {% endblock %}

@@ -11,7 +11,7 @@
     <div class="profile-card">
         <div class="profile-picture-section">
             {% if user.profilePicture %}
-                <img src="{{ user.profilePicture }}" alt="Photo de profil de {{ user.firstName }} {{ user.lastName }}" class="profile-picture">
+                <img src="{{ asset('uploads/profiles/' ~ user.profilePicture) }}" alt="Photo de profil de {{ user.firstName }} {{ user.lastName }}" class="profile-picture">
             {% else %}
                 <div class="profile-picture placeholder">
                     {{ (user.firstName|first ~ user.lastName|first)|upper }}
