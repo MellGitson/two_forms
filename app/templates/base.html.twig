@@ -136,6 +136,62 @@
                 align-items: center;
             }
 
+            .nav-dropdown {
+                position: relative;
+            }
+
+            .dropdown-toggle {
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background: rgba(10, 14, 39, 0.98);
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                min-width: 280px;
+                list-style: none;
+                padding: 0.5rem 0;
+                margin-top: 0.5rem;
+                box-shadow: 0 8px 32px var(--neon-cyan-shadow);
+                z-index: 1001;
+                backdrop-filter: blur(10px);
+            }
+
+            .nav-dropdown:hover .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-menu li {
+                margin: 0;
+            }
+
+            .dropdown-menu a {
+                display: block;
+                color: var(--text-primary);
+                text-decoration: none;
+                padding: 0.75rem 1.5rem;
+                transition: all 0.2s ease;
+            }
+
+            .dropdown-menu a:hover {
+                background: rgba(0, 217, 255, 0.15);
+                color: var(--neon-cyan);
+                padding-left: 2rem;
+            }
+
+            .dropdown-menu hr {
+                border: none;
+                border-top: 1px solid var(--border-color);
+                margin: 0.5rem 0;
+            }
+
             .btn {
                 padding: 0.6rem 1.2rem;
                 border: none;
@@ -357,9 +413,18 @@
                     {% if app.user %}
                         <li><a href="{{ path('app_profile_show') }}">Mon Profil</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <li><a href="{{ path('app_post_new') }}">Créer un article</a></li>
-                            <li><a href="{{ path('app_user_index') }}">Gestion Utilisateurs</a></li>
-                            <li><a href="{{ path('app_admin_comments_pending') }}">Gestion Approbations</a></li>
+                            <li class="nav-dropdown">
+                                <a href="#" class="dropdown-toggle">⚙️ Gestion</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ path('app_post_new') }}">➕ Créer un article</a></li>
+                                    <li><a href="{{ path('app_post_index') }}">📰 Tous les articles</a></li>
+                                    <li><a href="{{ path('app_admin_posts_pending') }}">⏳ Articles en attente</a></li>
+                                    <li><hr></li>
+                                    <li><a href="{{ path('app_admin_comments_pending') }}">💬 Commentaires en attente</a></li>
+                                    <li><hr></li>
+                                    <li><a href="{{ path('app_user_index') }}">👥 Gestion Utilisateurs</a></li>
+                                </ul>
+                            </li>
                         {% endif %}
                         <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
                     {% else %}
