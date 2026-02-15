@@ -4,39 +4,315 @@
 
 {% block body %}
 <div class="container">
-    <h1>Commentaires en attente d'approbation</h1>
+    <a href="{{ path('app_home') }}" class="btn-back">← Retour</a>
+    
+    <div class="header">
+        <h1>💬 Commentaires en attente d'approbation</h1>
+        <span class="comment-count">{{ comments|length }} commentaire(s)</span>
+    </div>
+
     {% if comments is not empty %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Auteur</th>
-                    <th>Contenu</th>
-                    <th>Date</th>
-                    <th>Post</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for comment in comments %}
+        <div class="comments-table">
+            <table>
+                <thead>
                     <tr>
-                        <td>{{ comment.id }}</td>
-                        <td>{{ comment.author.firstName }} {{ comment.author.lastName }}</td>
-                        <td>{{ comment.content }}</td>
-                        <td>{{ comment.createdAt|date('d/m/Y à H:i') }}</td>
-                        <td>{{ comment.post.title }}</td>
-                        <td>
-                            <form method="post" action="{{ path('app_admin_comment_approve', {'id': comment.id}) }}" style="display:inline;">
-                                <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ comment.id) }}">
-                                <button type="submit" class="btn btn-success">Approuver</button>
-                            </form>
-                        </td>
+                        <th>Auteur</th>
+                        <th>Contenu</th>
+                        <th>Article</th>
+                        <th>Date</th>
+                        <th>Actions</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for comment in comments %}
+                        <tr>
+                            <td class="comment-author-cell">
+                                <div class="author-info">
+                                    {% if comment.author.profilePicture %}
+                                        <img src="{{ asset('uploads/profiles/' ~ comment.author.profilePicture) }}" alt="{{ comment.author.firstName }}" class="author-avatar">
+                                    {% else %}
+                                        <div class="author-avatar placeholder">{{ (comment.author.firstName|first ~ comment.author.lastName|first)|upper }}</div>
+                                    {% endif %}
+                                    <div>
+                                        <strong>{{ comment.author.firstName }} {{ comment.author.lastName }}</strong>
+                                        <br>
+                                        <small>@{{ comment.author.username }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="comment-content">
+                                <p>{{ comment.content|slice(0, 100) }}{% if comment.content|length > 100 %}...{% endif %}</p>
+                            </td>
+                            <td class="article-title">
+                                <a href="{{ path('app_post_show', {'id': comment.post.id}) }}" title="{{ comment.post.title }}">
+                                    {{ comment.post.title|slice(0, 30) }}{% if comment.post.title|length > 30 %}...{% endif %}
+                                </a>
+                            </td>
+                            <td class="comment-date">{{ comment.createdAt|date('d/m/Y à H:i') }}</td>
+                            <td class="actions-cell">
+                                <form method="post" action="{{ path('app_admin_comment_approve', {'id': comment.id}) }}" style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ comment.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-success">✓ Approuver</button>
+                                </form>
+                                <form method="post" action="{{ path('app_admin_comment_reject', {'id': comment.id}) }}" style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ comment.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir rejeter ce commentaire ?')">✕ Rejeter</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p>Aucun commentaire en attente.</p>
+        <div class="empty-state">
+            <p>✓ Aucun commentaire en attente d'approbation</p>
+        </div>
     {% endif %}
 </div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .btn-back {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: var(--neon-cyan, #00d9ff);
+        text-decoration: none;
+        font-size: 0.95em;
+    }
+
+    .btn-back:hover {
+        text-decoration: underline;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--border-color, rgba(0, 217, 255, 0.2));
+    }
+
+    .header h1 {
+        margin: 0;
+        color: var(--neon-cyan-light, #00f5ff);
+        font-size: 2rem;
+    }
+
+    .comment-count {
+        background: rgba(0, 217, 255, 0.15);
+        color: var(--neon-cyan, #00d9ff);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9em;
+        font-weight: 600;
+    }
+
+    .comments-table {
+        background: rgba(26, 31, 58, 0.6);
+        border: 1px solid var(--border-color, rgba(0, 217, 255, 0.2));
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .comments-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .comments-table thead {
+        background: rgba(0, 217, 255, 0.1);
+        border-bottom: 2px solid var(--border-color, rgba(0, 217, 255, 0.2));
+    }
+
+    .comments-table th {
+        padding: 15px;
+        text-align: left;
+        color: var(--neon-cyan, #00d9ff);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85em;
+    }
+
+    .comments-table tbody tr {
+        border-bottom: 1px solid var(--border-color, rgba(0, 217, 255, 0.1));
+        transition: background-color 0.3s ease;
+    }
+
+    .comments-table tbody tr:hover {
+        background: rgba(0, 217, 255, 0.05);
+    }
+
+    .comments-table td {
+        padding: 15px;
+        color: var(--text-primary, #e4e6eb);
+    }
+
+    .comment-author-cell {
+        min-width: 250px;
+    }
+
+    .author-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border-color, rgba(0, 217, 255, 0.2));
+    }
+
+    .author-avatar.placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: bold;
+        font-size: 0.9em;
+        border: 2px solid var(--border-color, rgba(0, 217, 255, 0.2));
+    }
+
+    .comment-content {
+        max-width: 400px;
+        color: var(--text-secondary, #a0a6b8);
+        font-size: 0.9em;
+    }
+
+    .comment-content p {
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .article-title {
+        max-width: 200px;
+    }
+
+    .article-title a {
+        color: var(--neon-cyan, #00d9ff);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .article-title a:hover {
+        color: var(--neon-cyan-light, #00f5ff);
+        text-decoration: underline;
+    }
+
+    .comment-date {
+        font-size: 0.9em;
+        color: var(--text-secondary, #a0a6b8);
+        white-space: nowrap;
+    }
+
+    .actions-cell {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.85em;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+
+    .btn-success {
+        background-color: #00d95f;
+        color: #000;
+    }
+
+    .btn-success:hover {
+        background-color: #00ff6f;
+        transform: translateY(-2px);
+    }
+
+    .btn-danger {
+        background-color: #ff4757;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #ff6b7a;
+        transform: translateY(-2px);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-secondary, #a0a6b8);
+    }
+
+    .empty-state p {
+        font-size: 1.2em;
+        margin: 0;
+    }
+
+    @media (max-width: 1024px) {
+        .comment-content {
+            max-width: 250px;
+        }
+
+        .article-title {
+            max-width: 150px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .comments-table th,
+        .comments-table td {
+            padding: 10px;
+            font-size: 0.9em;
+        }
+
+        .author-info {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .comment-content {
+            max-width: none;
+        }
+
+        .article-title {
+            max-width: none;
+        }
+
+        .actions-cell {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
 {% endblock %}
