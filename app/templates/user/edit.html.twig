@@ -17,7 +17,7 @@
                 <h2>Informations de base</h2>
                 
                 <div class="form-group">
-                    {{ form_label(form.username, 'Nom d'utilisateur') }}
+                    {{ form_label(form.username, "Nom d'utilisateur") }}
                     {{ form_widget(form.username) }}
                     {{ form_errors(form.username) }}
                 </div>
@@ -80,12 +80,13 @@
             
             <div class="actions">
                 <button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
-                <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-secondary">Annuler</a>
+                <a href="{{ path('app_user_show', {id: user.id}) }}" class="btn btn-secondary">Annuler</a>
             </div>
         {{ form_end(form) }}
     </div>
 </div>
 
+{% verbatim %}
 <style>
     * { box-sizing: border-box; }
     
@@ -278,4 +279,5 @@
         }
     }
 </style>
+{% endverbatim %}
 {% endblock %}
