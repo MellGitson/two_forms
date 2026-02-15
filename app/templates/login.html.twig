@@ -1,82 +1,254 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Connexion - MyBlog{% endblock %}
 
 {% block body %}
-<div class="login-container">
-    <div class="login-box">
-        <h1>Connexion</h1>
-        
-        {% if error is defined and error %}
-        <div class="alert alert-danger">
-            {{ error }}
+<div class="login-wrapper">
+    <div class="login-container">
+        <div class="login-header">
+            <h1>MyBlog</h1>
+            <p>Connexion</p>
         </div>
+
+        {% if error %}
+            <div class="alert alert-danger">
+                <strong>Erreur de connexion</strong><br>
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
         {% endif %}
 
-        <form method="post" action="{{ path('app_login') }}">
+        <form method="post" action="{{ path('app_login') }}" class="login-form">
             <div class="form-group">
-                <label for="username">Nom d'utilisateur:</label>
-                <input type="text" id="username" name="username" required autofocus>
+                <label for="username">Nom d'utilisateur</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="form-input" 
+                    placeholder="Entrez votre nom d'utilisateur"
+                    required 
+                    autofocus
+                >
             </div>
 
             <div class="form-group">
-                <label for="password">Mot de passe:</label>
-                <input type="password" id="password" name="password" required>
+                <label for="password">Mot de passe</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input" 
+                    placeholder="Entrez votre mot de passe"
+                    required
+                >
             </div>
 
-            <button type="submit" class="btn btn-primary">Connexion</button>
+            <button type="submit" class="btn btn-primary btn-submit">
+                Se connecter
+            </button>
+
+            <div class="divider">Ou</div>
+
+            <a href="{{ path('app_home') }}" class="btn btn-secondary btn-secondary-full">
+                Continuer en tant que visiteur
+            </a>
         </form>
 
-        <div class="links-bottom">
-            <a href="{{ path('app_home') }}" class="link">Retour à l'accueil</a>
+        <div class="login-footer">
+            <p>Comptes de test disponibles :</p>
+            <ul class="test-accounts">
+                <li><strong>Admin:</strong> admin / admin123</li>
+                <li><strong>Modérateur:</strong> mell / canac</li>
+            </ul>
         </div>
     </div>
 </div>
 
 <style>
-    body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .login-wrapper {
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        font-family: Arial, sans-serif;
+        padding: 2rem;
     }
 
     .login-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
-
-    .login-box {
-        background: white;
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        background: rgba(26, 31, 58, 0.95);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 3rem;
         width: 100%;
-        max-width: 400px;
+        max-width: 420px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 40px var(--neon-cyan-shadow);
+        animation: slideUp 0.5s ease;
     }
 
-    .login-box h1 {
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-header {
         text-align: center;
-        color: #333;
-        margin-bottom: 30px;
-        font-size: 1.8em;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 1.5rem;
+    }
+
+    .login-header h1 {
+        font-size: 2.5rem;
+        margin: 0;
+        background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-cyan-light) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: none;
+    }
+
+    .login-header p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin: 0.5rem 0 0 0;
+    }
+
+    .login-form {
+        margin-bottom: 2rem;
     }
 
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 1.5rem;
     }
 
     .form-group label {
         display: block;
-        margin-bottom: 8px;
-        color: #333;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--neon-cyan-light);
+        font-size: 0.95rem;
+    }
+
+    .form-input {
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        background: rgba(37, 45, 71, 0.8) !important;
+        color: var(--text-primary) !important;
+        border: 2px solid var(--border-color) !important;
+        border-radius: 6px !important;
+        transition: all 0.3s ease !important;
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    .form-input::placeholder {
+        color: var(--text-secondary);
+    }
+
+    .form-input:focus {
+        border-color: var(--neon-cyan) !important;
+        background: rgba(37, 45, 71, 0.95) !important;
+        box-shadow: 0 0 15px var(--neon-cyan-shadow) !important;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    .divider {
+        text-align: center;
+        color: var(--text-secondary);
+        margin: 2rem 0;
+        position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: calc((100% - 30px) / 2);
+        height: 1px;
+        background: var(--border-color);
+    }
+
+    .divider::before {
+        left: 0;
+    }
+
+    .divider::after {
+        right: 0;
+    }
+
+    .btn-secondary-full {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-footer {
+        background: rgba(0, 217, 255, 0.1);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .login-footer p {
+        margin: 0 0 0.8rem 0;
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+
+    .test-accounts {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .test-accounts li {
+        color: var(--text-secondary);
+        padding: 0.4rem 0;
+        padding-left: 1rem;
+        position: relative;
+    }
+
+    .test-accounts li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: var(--neon-cyan);
         font-weight: bold;
     }
+
+    .test-accounts strong {
+        color: var(--neon-cyan);
+        font-family: 'Courier New', monospace;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+        .login-container {
+            padding: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
 
     .form-group input {
         width: 100%;

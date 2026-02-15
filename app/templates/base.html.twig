@@ -1,17 +1,396 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}MyBlog - Mini Blog Symfony{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>📝</text></svg>">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+        
         {% block stylesheets %}
         {% endblock %}
+        
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --primary-dark: #0a0e27;
+                --secondary-dark: #1a1f3a;
+                --tertiary-dark: #252d47;
+                --neon-cyan: #00d9ff;
+                --neon-cyan-light: #00f5ff;
+                --neon-cyan-shadow: rgba(0, 217, 255, 0.3);
+                --text-primary: #e4e6eb;
+                --text-secondary: #a0a6b8;
+                --border-color: rgba(0, 217, 255, 0.2);
+                --success: #00d95f;
+                --warning: #ffa500;
+                --danger: #ff4757;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+                color: var(--text-primary);
+                line-height: 1.6;
+                min-height: 100vh;
+                position: relative;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: 
+                    radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.03) 0%, transparent 50%);
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            /* Navigation */
+            nav {
+                background: rgba(10, 14, 39, 0.95);
+                backdrop-filter: blur(10px);
+                border-bottom: 2px solid var(--border-color);
+                padding: 1rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+            }
+
+            nav .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .navbar-brand {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--neon-cyan);
+                text-decoration: none;
+                text-shadow: 0 0 10px var(--neon-cyan-shadow);
+                transition: all 0.3s ease;
+            }
+
+            .navbar-brand:hover {
+                text-shadow: 0 0 20px var(--neon-cyan-shadow);
+                transform: scale(1.05);
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 2rem;
+                list-style: none;
+            }
+
+            .nav-links a {
+                color: var(--text-primary);
+                text-decoration: none;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+            .nav-links a::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--neon-cyan);
+                transition: width 0.3s ease;
+            }
+
+            .nav-links a:hover {
+                color: var(--neon-cyan);
+                background: rgba(0, 217, 255, 0.1);
+            }
+
+            .nav-links a:hover::after {
+                width: 100%;
+            }
+
+            .navbar-auth {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+            }
+
+            .btn {
+                padding: 0.6rem 1.2rem;
+                border: none;
+                border-radius: 6px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 0.95rem;
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, var(--neon-cyan) 0%, #00b8d4 100%);
+                color: #000;
+                box-shadow: 0 0 15px var(--neon-cyan-shadow);
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0 25px var(--neon-cyan-shadow);
+            }
+
+            .btn-secondary {
+                background: rgba(0, 217, 255, 0.15);
+                color: var(--neon-cyan);
+                border: 2px solid var(--neon-cyan);
+            }
+
+            .btn-secondary:hover {
+                background: rgba(0, 217, 255, 0.25);
+            }
+
+            .btn-success {
+                background: var(--success);
+                color: #fff;
+            }
+
+            .btn-danger {
+                background: var(--danger);
+                color: #fff;
+            }
+
+            .btn-warning {
+                background: var(--warning);
+                color: #000;
+            }
+
+            /* Main Container */
+            main {
+                max-width: 1200px;
+                margin: 2rem auto;
+                padding: 0 2rem;
+                min-height: 60vh;
+            }
+
+            /* Alert Messages */
+            .alert {
+                padding: 1rem 1.5rem;
+                margin-bottom: 1.5rem;
+                border-radius: 8px;
+                border-left: 4px solid transparent;
+                animation: slideIn 0.3s ease;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(-100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            .alert-success {
+                background: rgba(0, 217, 95, 0.15);
+                color: #00d95f;
+                border-left-color: #00d95f;
+            }
+
+            .alert-danger {
+                background: rgba(255, 71, 87, 0.15);
+                color: #ff4757;
+                border-left-color: #ff4757;
+            }
+
+            .alert-warning {
+                background: rgba(255, 165, 0, 0.15);
+                color: #ffa500;
+                border-left-color: #ffa500;
+            }
+
+            .alert-info {
+                background: rgba(0, 217, 255, 0.15);
+                color: var(--neon-cyan);
+                border-left-color: var(--neon-cyan);
+            }
+
+            /* Cards */
+            .card {
+                background: rgba(26, 31, 58, 0.8);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 1.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .card:hover {
+                border-color: var(--neon-cyan);
+                box-shadow: 0 0 20px var(--neon-cyan-shadow);
+                transform: translateY(-4px);
+            }
+
+            /* Forms */
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="file"],
+            textarea,
+            select {
+                width: 100%;
+                padding: 0.75rem;
+                background: rgba(37, 45, 71, 0.8);
+                color: var(--text-primary);
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                margin-bottom: 1rem;
+                font-family: 'Inter', sans-serif;
+                transition: all 0.3s ease;
+            }
+
+            input[type="text"]:focus,
+            input[type="email"]:focus,
+            input[type="password"]:focus,
+            input[type="file"]:focus,
+            textarea:focus,
+            select:focus {
+                outline: none;
+                border-color: var(--neon-cyan);
+                background: rgba(37, 45, 71, 0.95);
+                box-shadow: 0 0 15px var(--neon-cyan-shadow);
+            }
+
+            /* Footer */
+            footer {
+                background: rgba(10, 14, 39, 0.95);
+                border-top: 2px solid var(--border-color);
+                padding: 2rem;
+                margin-top: 4rem;
+                text-align: center;
+                color: var(--text-secondary);
+            }
+
+            footer a {
+                color: var(--neon-cyan);
+                text-decoration: none;
+                transition: all 0.3s ease;
+            }
+
+            footer a:hover {
+                text-shadow: 0 0 10px var(--neon-cyan-shadow);
+            }
+
+            /* Headings */
+            h1, h2, h3, h4, h5, h6 {
+                font-weight: 700;
+                margin-bottom: 1rem;
+                color: var(--neon-cyan-light);
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                text-shadow: 0 0 15px var(--neon-cyan-shadow);
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            /* Links */
+            a {
+                color: var(--neon-cyan);
+                transition: all 0.3s ease;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .nav-links {
+                    gap: 1rem;
+                }
+
+                h1 {
+                    font-size: 2rem;
+                }
+
+                main {
+                    padding: 0 1rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <a href="{{ path('app_home') }}" class="navbar-brand">📝 MyBlog</a>
+                <ul class="nav-links">
+                    <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                    {% if app.user %}
+                        <li><a href="{{ path('app_profile_show') }}">Mon Profil</a></li>
+                        {% if is_granted('ROLE_MODERATOR') %}
+                            <li><a href="{{ path('app_post_new') }}">Créer un article</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('app_user_index') }}">Gestion Utilisateurs</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                    {% else %}
+                        <li><a href="{{ path('app_login') }}">Connexion</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Flash Messages -->
+        <main>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <!-- Content -->
+            {% block body %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 <strong>MyBlog</strong> - Mini Blog Symfony | Développé par <a href="#">IPSSI Étudiants</a></p>
+        </footer>
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
     </body>
 </html>
