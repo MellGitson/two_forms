@@ -122,7 +122,9 @@
 </div>
 
 <style>
-    * { box-sizing: border-box; }
+    * { 
+        box-sizing: border-box; 
+    }
 
     body {
         background: #0a0e27;
@@ -137,8 +139,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 80vh;
+        min-height: 100vh;
         padding: 20px;
+        width: 100%;
     }
 
     .login-card {
@@ -147,7 +150,7 @@
         border-radius: 10px;
         padding: 40px;
         width: 100%;
-        max-width: 450px;
+        max-width: 500px;
         box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
     }
 
@@ -159,65 +162,89 @@
         text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
     }
 
+    .form-login {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+
     .form-group {
-        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
     }
 
     .form-group label {
-        display: block;
-        margin-bottom: 8px;
         color: #00d9ff;
         font-weight: 600;
         font-size: 0.95em;
+        display: block;
     }
 
     .form-control {
-        width: 100%;
-        padding: 12px;
-        background: #0a0e27;
-        border: 2px solid #00d9ff;
-        border-radius: 5px;
-        color: #e4e6eb;
-        font-size: 1em;
-        transition: all 0.3s ease;
+        width: 100% !important;
+        padding: 12px !important;
+        background: #0a0e27 !important;
+        border: 2px solid #00d9ff !important;
+        border-radius: 5px !important;
+        color: #e4e6eb !important;
+        font-size: 1em !important;
+        transition: all 0.3s ease !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        box-sizing: border-box !important;
     }
 
     .form-control:focus {
-        outline: none;
-        box-shadow: 0 0 15px rgba(0, 217, 255, 0.6);
-        border-color: #00d9ff;
+        outline: none !important;
+        box-shadow: 0 0 15px rgba(0, 217, 255, 0.6) !important;
+        background: #0f1235 !important;
     }
 
     .form-control::placeholder {
-        color: #666;
+        color: #666 !important;
     }
 
     .form-error {
         color: #ff6b6b;
         font-size: 0.85em;
-        margin-top: 5px;
         background: rgba(255, 107, 107, 0.1);
         padding: 8px;
         border-radius: 4px;
         border-left: 3px solid #ff6b6b;
+        width: 100%;
+    }
+
+    .form-error ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .form-error li {
+        list-style: none;
+        padding: 2px 0;
     }
 
     .form-checkbox {
         display: flex;
         align-items: center;
-        margin-bottom: 20px;
+        gap: 10px;
+        width: 100%;
     }
 
-    .form-checkbox input {
-        margin-right: 10px;
+    .form-checkbox input[type="checkbox"] {
         cursor: pointer;
         accent-color: #00d9ff;
+        width: 20px;
+        height: 20px;
     }
 
     .form-checkbox label {
         margin-bottom: 0;
         cursor: pointer;
         color: #e4e6eb;
+        font-weight: normal;
     }
 
     .btn-submit {
@@ -232,6 +259,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
         text-shadow: 0 1px 2px rgba(255,255,255,0.2);
+        margin-top: 20px;
     }
 
     .btn-submit:hover {
@@ -249,6 +277,10 @@
         color: #666;
     }
 
+    .form-footer p {
+        margin: 0;
+    }
+
     .form-footer a {
         color: #00d9ff;
         text-decoration: none;
@@ -263,6 +295,7 @@
         padding: 15px;
         margin-bottom: 20px;
         border-radius: 5px;
+        width: 100%;
     }
 
     .alert-danger {
@@ -271,18 +304,24 @@
         color: #ff6b6b;
     }
 
+    .alert p {
+        margin: 0;
+    }
+
     @media (max-width: 768px) {
         .login-card {
+            padding: 25px 20px;
             border-radius: 5px;
-            padding: 30px 20px;
         }
 
         .login-card h1 {
             font-size: 1.5em;
+            margin-bottom: 20px;
         }
 
         .login-container {
             min-height: 100vh;
+            padding: 10px;
         }
     }
 </style>
